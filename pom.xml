@@ -2,6 +2,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>uk.co.caprica</groupId>
@@ -11,20 +12,19 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <maven-compiler-plugin.version>3.8.0</maven-compiler-plugin.version>
-        <maven-shade-plugin.version>2.4.3</maven-shade-plugin.version>
-        <maven-surefire-plugin.version>2.22.1</maven-surefire-plugin.version>
-        <exec-maven-plugin.version>1.5.0</exec-maven-plugin.version>
+        <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
+        <maven-shade-plugin.version>3.2.1</maven-shade-plugin.version>
+        <maven-surefire-plugin.version>2.22.2</maven-surefire-plugin.version>
+        <exec-maven-plugin.version>1.6.0</exec-maven-plugin.version>
 
         <vertx.version>3.7.1</vertx.version>
-        <junit-jupiter.version>5.4.0</junit-jupiter.version>
+        <junit-jupiter.version>5.5.0</junit-jupiter.version>
 
         <main.verticle>uk.co.caprica.spa.MainVerticle</main.verticle>
 
         <frontend.app.dir>${project.basedir}/src/main/app</frontend.app.dir>
         <node.version>v10.15.0</node.version>
         <yarn.version>v1.13.0</yarn.version>
-
     </properties>
 
     <dependencyManagement>
@@ -49,7 +49,6 @@
             <artifactId>vertx-junit5</artifactId>
             <scope>test</scope>
         </dependency>
-
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
@@ -84,22 +83,19 @@
                         </goals>
                         <configuration>
                             <transformers>
-                                <transformer
-                                    implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                                     <manifestEntries>
                                         <Main-Class>io.vertx.core.Launcher</Main-Class>
                                         <Main-Verticle>${main.verticle}</Main-Verticle>
                                     </manifestEntries>
                                 </transformer>
-                                <transformer
-                                    implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
                                     <resource>META-INF/services/io.vertx.core.spi.VerticleFactory</resource>
                                 </transformer>
                             </transformers>
                             <artifactSet>
                             </artifactSet>
-                            <outputFile>${project.build.directory}/${project.artifactId}-${project.version}-fat.jar
-                            </outputFile>
+                            <outputFile>${project.build.directory}/${project.artifactId}-${project.version}-fat.jar</outputFile>
                         </configuration>
                     </execution>
                 </executions>
@@ -120,8 +116,6 @@
                     </arguments>
                 </configuration>
             </plugin>
-
-
             <plugin>
                 <groupId>com.github.eirslett</groupId>
                 <artifactId>frontend-maven-plugin</artifactId>
@@ -160,6 +154,31 @@
                     </execution>
                 </executions>
             </plugin>
+            <!--
+                This resources plugin is a very important step, its job is to take the client application artifacts
+                built by the frontend plugin and copy them to the "right place".
+
+                The "right place" to copy the artifacts to, and where to copy them from, can change depending on which
+                client framework is being used.
+
+                For all client frameworks:
+
+                    - client application root is "src/main/app"
+                    - install directory is the Maven ${project.build.directory} which will translate to "target/classes"
+
+                Note that "app" is an arbitrary choice, it could be something else if you wanted - so long as you change
+                it everywhere.
+
+                For AngularJS:
+
+                    - react-scripts build default output directory is "<app-root>/dist", so "src/main/app/dist"
+                    - directory to copy the built application to is "target/classes"
+                    - the "dist" folder itself contains an "app" sub-directory, giving effectively "target/classes/app"
+                    - the Java router code uses this "app" directory on the classpath
+
+                We could instead have copied from "src/main/app/dist/app" to "target/classes/app" to match with the
+                ReactJS project, it doesn't really matter as the net effect is the same.
+            -->
             <plugin>
                 <artifactId>maven-resources-plugin</artifactId>
                 <version>3.1.0</version>
@@ -185,6 +204,5 @@
 
         </plugins>
     </build>
-
 
 </project>

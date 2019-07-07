@@ -1,0 +1,27 @@
+<h1>Users</h1>
+<table *ngIf="users$ | async; let users; else loading">
+  <thead>
+    <tr>
+      <th>username</th>
+      <th>name</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let user of users">
+      <td>
+        <a class="App-link" routerLink="/users/{{user.username}}">{{user.username}}</a>
+      </td>
+      <td>
+        {{user.name}}
+      </td>
+    </tr>
+  </tbody>
+</table>
+<ng-template #loading>
+  <p *ngIf="!error; else err">Fetching users...</p>
+  <ng-template #err>
+    <p>Failed to load users: {{ error.statusText }}</p>
+  </ng-template>
+</ng-template>
+<br>
+<span><a class="App-link" routerLink="/home">Home</a></span>

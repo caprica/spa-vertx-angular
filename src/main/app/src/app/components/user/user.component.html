@@ -1,0 +1,27 @@
+<h1>User {{ username }}</h1>
+<table *ngIf="user$ | async; let user; else loading">
+  <thead>
+  <tr>
+    <th>username</th>
+    <th>name</th>
+  </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        {{ user.username }}
+      </td>
+      <td>
+        {{ user.name }}
+      </td>
+    </tr>
+  </tbody>
+</table>
+<ng-template #loading>
+  <p *ngIf="!error; else err">Fetching user {{ username }}...</p>
+  <ng-template #err>
+    <p>Failed to load user: {{ error.statusText }}</p>
+  </ng-template>
+</ng-template>
+<br>
+<span><a class="App-link" routerLink="/home">Home</a> | <a class="App-link" routerLink="/users">Users</a></span>

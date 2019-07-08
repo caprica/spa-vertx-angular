@@ -55,7 +55,14 @@ public class MainVerticle extends AbstractVerticle {
         vertx.deployVerticle(new UserService(new MemoryUserRepository()));
 
         // Create the server
-        vertx.createHttpServer().requestHandler(router).listen(8080);
+        vertx.createHttpServer().requestHandler(router).listen(8080, result -> {
+            if (result.succeeded()) {
+                System.out.println("Vert.x server listening on port 8080");
+            } else {
+                System.out.println("Vert.x server failed to start");
+                System.out.println(result.cause());
+            }
+        });
     }
 
 }

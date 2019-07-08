@@ -9,11 +9,10 @@ import { UsersComponent    } from './components/users/users.component';
 import { BrowserModule } from '@angular/platform-browser';
 
 const routes: Routes = [
-  { path: 'home'           , component : HomeComponent                        },
-  { path: 'users'          , component : UsersComponent                       },
-  { path: 'users/:username', component : UserComponent                        },
-  { path: ''               , redirectTo: '/home'          , pathMatch: 'full' },
-  { path: '**'             , component : NotFoundComponent                    }
+  { path: ''               , component : HomeComponent    },
+  { path: 'users'          , component : UsersComponent   },
+  { path: 'users/:username', component : UserComponent    },
+  { path: '**'             , component : NotFoundComponent}
 ];
 
 @NgModule({
